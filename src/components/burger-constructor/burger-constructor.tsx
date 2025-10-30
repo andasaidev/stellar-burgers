@@ -1,4 +1,3 @@
-// src/components/burger-constructor/burger-constructor.tsx
 import { FC, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../services/store';
@@ -29,7 +28,6 @@ export const BurgerConstructor: FC = () => {
   }, [location.pathname, dispatch]);
 
   const onOrderClick = () => {
-    // ЗАЩИТА ОТ UNDEFINED
     if (!constructorItems?.bun || orderRequest) return;
     if (!user) {
       navigate('/login');

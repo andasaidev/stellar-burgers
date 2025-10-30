@@ -1,4 +1,3 @@
-// src/components/ingredients-category/ingredients-category.tsx
 import { forwardRef, useMemo } from 'react';
 import { useAppSelector } from '../../services/store';
 import { getConstructorItems } from '../../services/slices/constructor-slice';
@@ -12,7 +11,6 @@ export const IngredientsCategory = forwardRef<
 >(({ title, titleRef, ingredients }, ref) => {
   const constructorItems = useAppSelector(getConstructorItems);
 
-  // ДОБАВЛЯЕМ ЗАЩИТУ
   const bun = constructorItems?.bun || null;
   const constructorIngredients = constructorItems?.ingredients || [];
 

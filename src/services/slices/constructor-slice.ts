@@ -1,4 +1,3 @@
-// src/services/slices/constructor-slice.ts
 import {
   createSlice,
   createAsyncThunk,

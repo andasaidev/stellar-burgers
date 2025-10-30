@@ -1,4 +1,3 @@
-// src/services/slices/user-slice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import {
   loginUserApi,

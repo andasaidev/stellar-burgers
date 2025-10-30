@@ -1,4 +1,3 @@
-// src/components/feed-info/feed-info.tsx
 import { FC } from 'react';
 import { useAppSelector } from '../../services/store';
 import { FeedInfoUI } from '../ui/feed-info';
