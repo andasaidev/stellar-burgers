@@ -12,6 +12,11 @@ export type TIngredient = {
   image_mobile: string;
 };
 
+export type TIngredientsResponse = {
+  success: boolean;
+  data: TIngredient[];
+};
+
 export type TConstructorIngredient = TIngredient & {
   id: string;
 };
@@ -30,6 +35,12 @@ export type TOrdersData = {
   orders: TOrder[];
   total: number;
   totalToday: number;
+};
+
+export type TOrderResponse = {
+  success: boolean;
+  name: string;
+  order: TOrder;
 };
 
 export type TUser = {
