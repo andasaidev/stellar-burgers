@@ -1,18 +1,13 @@
-import { FC, useMemo, useEffect } from 'react';
+import { FC, useMemo, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../services/store';
 import { ingredientsSelector } from '../../services/slices/ingredients-slice';
-import {
-  feedOrdersSelector,
-  fetchFeed
-} from '../../services/slices/feed-slice';
-import {
-  profileOrdersSelector,
-  fetchUserOrders
-} from '../../services/slices/orders-slice';
+import { feedOrdersSelector } from '../../services/slices/feed-slice';
+import { profileOrdersSelector } from '../../services/slices/orders-slice';
+import { getOrderByNumberApi } from '../../utils/burger-api';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
-import { TIngredient } from '@utils-types';
+import { TIngredient, TOrder } from '@utils-types';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams();
@@ -20,23 +15,43 @@ export const OrderInfo: FC = () => {
   const ingredients = useAppSelector(ingredientsSelector);
   const feedOrders = useAppSelector(feedOrdersSelector);
   const profileOrders = useAppSelector(profileOrdersSelector);
+  const [directOrder, setDirectOrder] = useState<TOrder | null>(null);
 
   useEffect(() => {
-    //для маршрутов /feed/:number
-    dispatch(fetchFeed());
+    if (!number) return;
 
-    //для маршрутов /profile/orders/:number
-    dispatch(fetchUserOrders());
-  }, [dispatch]);
+    const fetchDirectOrder = async () => {
+      try {
+        const orderNumber = parseInt(number);
+        const response = await getOrderByNumberApi(orderNumber);
+        const order = response.orders?.[0] || response;
+        setDirectOrder(order as TOrder);
+      } catch (error) {
+        console.error('Error fetching order:', error);
+      }
+    };
+
+    const orderNumber = parseInt(number);
+    const orderInStore =
+      feedOrders.find((order) => order.number === orderNumber) ||
+      profileOrders.find((order) => order.number === orderNumber);
+
+    if (!orderInStore) {
+      fetchDirectOrder();
+    }
+  }, [number, feedOrders, profileOrders]);
 
   const orderData = useMemo(() => {
-    const orderNumber = number ? parseInt(number) : 0;
+    if (!number) return null;
+
+    const orderNumber = parseInt(number);
 
     return (
+      directOrder ||
       feedOrders.find((order) => order.number === orderNumber) ||
       profileOrders.find((order) => order.number === orderNumber)
     );
-  }, [number, feedOrders, profileOrders]);
+  }, [number, directOrder, feedOrders, profileOrders]);
 
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
